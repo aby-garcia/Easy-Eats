@@ -4,33 +4,36 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 
 const app = express();
+const PORT = process.env.PORT || 5000;
+
+// Middleware
 app.use(bodyParser.json());
 app.use(cors());
 
-// Use environment variable for MongoDB connection string
-const mongoURI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/recipes';
-mongoose.connect(mongoURI);
+// MongoDB Atlas connection URI
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://abygarcia2554:Ilovedat1!@cluster0.qygelvx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
-mongoose.connection.on('connected', () => {
-    console.log(`Mongoose connected to ${mongoURI}`);
-});
-mongoose.connection.on('error', (err) => {
-    console.error(`Mongoose connection error: ${err}`);
-});
-mongoose.connection.on('disconnected', () => {
-    console.log('Mongoose disconnected');
+// Connect to MongoDB Atlas
+mongoose.connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
 });
 
-// MongoDB schema definition
+// Check if MongoDB is connected successfully
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+    console.log('Connected to MongoDB Atlas');
+});
+
+// Define MongoDB schema and model
 const RecipeSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    ingredients: {
-        type: [{
-            name: { type: String, required: true },
-            measurement: { type: String, default: '' }
-        }],
-        required: true
-    },
+    ingredients: [{
+        name: { type: String, required: true },
+        measurement: { type: String, default: '' }
+    }],
     instructions: { type: String, required: true },
     cookTime: { type: String, required: true },
     description: { type: String, required: true },
@@ -39,6 +42,8 @@ const RecipeSchema = new mongoose.Schema({
 });
 
 const Recipe = mongoose.model('Recipe', RecipeSchema);
+
+// Routes
 
 // Endpoint to fetch recipes matching specified ingredients
 app.post('/api/recipes', async (req, res) => {
@@ -140,6 +145,6 @@ app.delete('/api/delete-all-recipes', async (req, res) => {
 });
 
 // Start the server
-app.listen(5000, () => {
-    console.log('Server is running on http://localhost:5000');
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
