@@ -7,11 +7,10 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-// MongoDB connection setup
-const mongoURI = 'mongodb://127.0.0.1:27017/recipes';
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+// Use environment variable for MongoDB connection string
+const mongoURI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/recipes';
+mongoose.connect(mongoURI);
 
-// MongoDB connection events
 mongoose.connection.on('connected', () => {
     console.log(`Mongoose connected to ${mongoURI}`);
 });

@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: easy-eats
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: MONGO_URI
+        value: mongodb://127.0.0.1:27017/recipes
