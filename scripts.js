@@ -89,7 +89,7 @@ function displayRecipes(recipes) {
 
 // Function to navigate to recipe details page
 function viewRecipeDetails(recipeId) {
-    window.location.href = `/recipe-details.html?id=${recipeId}`;
+    window.location.href = `/Easy-Eats/recipe-details.html?id=${recipeId}`;
 }
 
 // Function to load recipe details for the current page
