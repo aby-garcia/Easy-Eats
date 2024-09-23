@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: easy-eats
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: MONGO_URI
+        value: mongodb+srv://abygarcia2554!@cluster0.qygelvx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
